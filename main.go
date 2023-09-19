@@ -31,6 +31,10 @@ func main() {
 	apiRouter.Get("/reset", apiCfg.handlerReset)
 	router.Mount("/api", apiRouter)
 
+	adminRouter := chi.NewRouter()
+	adminRouter.Get("/metrics", apiCfg.handlerMetrics)
+	router.Mount("/admin", adminRouter)
+
 	corsMux := middlewareCors(router)
 
 	srv := &http.Server{
