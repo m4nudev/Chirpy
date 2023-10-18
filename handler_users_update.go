@@ -21,11 +21,13 @@ func (cfg *apiConfig) handlerUsersUpdate(w http.ResponseWriter, r *http.Request)
 	token, err := auth.GetBearerToken(r.Header)
 	if err != nil {
 		respondWithError(w, http.StatusUnauthorized, "Couldn't find JWT")
+		return
 	}
 
 	subject, err := auth.ValidateJWT(token, cfg.jwtSecret)
 	if err != nil {
 		respondWithError(w, http.StatusUnauthorized, "Couldn't validate JWT")
+		return
 	}
 
 	decoder := json.NewDecoder(r.Body)
@@ -42,7 +44,7 @@ func (cfg *apiConfig) handlerUsersUpdate(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	userIDInt, err := strconv.Atoi((subject))
+	userIDInt, err := strconv.Atoi(subject)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "Couldn't parse user ID")
 		return
